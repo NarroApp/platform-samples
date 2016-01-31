@@ -7,7 +7,7 @@
   <body>
     <p>Here are your most recent Narro articles!</p>
     <p>
-      <%= articles.map{ |article| article["title"] }.join(', ') %>
+      <%= articles.map{ |article| article["title"] }.join('<br>') %>
     </p>
   </body>
 </html>

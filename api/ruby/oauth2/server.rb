@@ -4,7 +4,8 @@ require 'rest_client'
 require 'json'
 
 CLIENT_ID = ENV['NARRO_CLIENT_ID']
-CLIENT_SECRET = ENV['NARRO_SECRET_ID']
+CLIENT_SECRET = ENV['NARRO_CLIENT_SECRET']
+CLIENT_URI = 'http://localhost:4567'
 
 use Rack::Session::Pool, :cookie_only => false
 
@@ -13,7 +14,11 @@ def authenticated?
 end
 
 def authenticate!
-  erb :index, :locals => {:client_id => CLIENT_ID}
+  erb :index, :locals => {
+    :client_id => CLIENT_ID,
+    :response_type => 'code',
+    :redirect_uri => CLIENT_URI + '/callback'
+  }
 end
 
 get '/' do
@@ -24,7 +29,7 @@ get '/' do
     locals = {}
 
     begin
-      articles = RestClient.get('https://www.narro.co/api/v1/articles',
+      result = RestClient.get('https://www.narro.co/api/v1/articles',
                                     {:Authorization => 'Bearer ' + access_token,
                                     :accept => :json})
     rescue => e
@@ -36,7 +41,7 @@ get '/' do
       return authenticate!
     end
 
-    locals['articles'] = articles
+    locals['articles'] = JSON.parse(result)['data']
     erb :details, :locals => locals
   end
 end
@@ -47,10 +52,11 @@ get '/callback' do
   result = RestClient.post('https://www.narro.co/oauth2/token',
                           {:client_id => CLIENT_ID,
                            :client_secret => CLIENT_SECRET,
-                           :code => session_code},
-                           :accept => :json)
+                           :grant_type => 'authorization_code',
+                           :redirect_uri => CLIENT_URI + '/callback',
+                           :code => session_code})
 
-  session[:access_token] = JSON.parse(result)['value']
+  session[:access_token] = JSON.parse(result)['access_token']['value']
 
   redirect '/'
 end
