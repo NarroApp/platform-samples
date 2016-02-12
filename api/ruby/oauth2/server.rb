@@ -56,7 +56,7 @@ get '/callback' do
                            :redirect_uri => CLIENT_URI + '/callback',
                            :code => session_code})
 
-  session[:access_token] = JSON.parse(result)['access_token']['value']
+  session[:access_token] = JSON.parse(result)['access_token']
 
   redirect '/'
 end
