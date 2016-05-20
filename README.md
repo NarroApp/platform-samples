@@ -1,5 +1,6 @@
 Narro Platform Samples
 ================
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/86c337e3783941c7887c2aa831a65292)](https://www.codacy.com/app/email_3/platform-samples?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=NarroApp/platform-samples&amp;utm_campaign=Badge_Grade)
 
 This is a public place for all sample projects related to the Narro Platform.
 
