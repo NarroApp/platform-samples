@@ -32,7 +32,7 @@ get '/' do
       result = RestClient.get('https://www.narro.co/api/v1/articles',
                                     {:Authorization => 'Bearer ' + access_token,
                                     :accept => :json})
-    rescue => e
+    rescue
       # request didn't succeed because the token was revoked so we
       # invalidate the token stored in the session and render the
       # index page so that the user can start the OAuth flow again
